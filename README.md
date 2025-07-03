@@ -2,6 +2,8 @@
 
 A fast, modern 4-panel terminal emulator built with Tauri and Rust, featuring GPU-accelerated rendering. Perfect for developers who need multiple terminal sessions visible at once.
 
+![image](https://github.com/user-attachments/assets/af4c78b3-84a8-47d9-a0bb-bb6b355e4fcc)
+
 ## Features
 
 - 🚀 **Fast Performance**: Native Rust backend with portable-pty for efficient terminal emulation
