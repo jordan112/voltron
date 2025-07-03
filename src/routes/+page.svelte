@@ -118,21 +118,37 @@
         // Now try to add Claude functionality
         setTimeout(async () => {
           try {
-            console.log('Attempting to initialize store and dialog...');
-            store = new Store('voltron.dat');
+            console.log('Attempting to run Claude in terminals...');
             
-            // Get working directory
-            const workingDir = await getWorkingDirectory();
-            console.log('Selected working directory:', workingDir);
+            // For now, skip the store and just prompt for directory
+            let workingDir = '~';
+            
+            try {
+              const selected = await open({
+                directory: true,
+                multiple: false,
+                title: 'Select Working Directory for Claude'
+              });
+              
+              if (selected && typeof selected === 'string') {
+                workingDir = selected;
+                console.log('User selected directory:', workingDir);
+              } else {
+                console.log('User cancelled directory selection, using home directory');
+              }
+            } catch (err) {
+              console.error('Error showing directory picker:', err);
+              // Continue with home directory
+            }
             
             // Send command to run Claude in each terminal
             for (const panel of panels) {
               try {
-                const command = `cd ${workingDir} && claude\n`;
+                const command = `cd "${workingDir}" && claude\n`;
                 const encoder = new TextEncoder();
                 const bytes = Array.from(encoder.encode(command));
                 await invoke('write_to_terminal', { 
-                  session_id: panel.id, 
+                  sessionId: panel.id,  // Fix parameter name
                   data: bytes 
                 });
                 console.log(`Sent Claude command to terminal ${panel.id}`);
