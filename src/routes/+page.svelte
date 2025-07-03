@@ -141,17 +141,27 @@
               // Continue with home directory
             }
             
-            // Send command to run Claude in each terminal
+            // Send command to run Claude in each terminal with unique ports
+            // Use consistent ports based on position
+            const portMap: Record<string, number> = {
+              'top-left': 54545,
+              'top-right': 54546,
+              'bottom-left': 54547,
+              'bottom-right': 54548
+            };
+            
             for (const panel of panels) {
+              const port = portMap[panel.position];
+              
               try {
-                const command = `cd "${workingDir}" && claude\n`;
+                const command = `cd "${workingDir}" && ANTHROPIC_OAUTH_PORT=${port} claude\n`;
                 const encoder = new TextEncoder();
                 const bytes = Array.from(encoder.encode(command));
                 await invoke('write_to_terminal', { 
                   sessionId: panel.id,  // Fix parameter name
                   data: bytes 
                 });
-                console.log(`Sent Claude command to terminal ${panel.id}`);
+                console.log(`Sent Claude command to terminal ${panel.position} with port ${port}`);
               } catch (err) {
                 console.error(`Failed to send Claude command to terminal ${panel.id}:`, err);
               }
