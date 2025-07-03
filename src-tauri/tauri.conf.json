@@ -18,7 +18,7 @@
   "app": {
     "windows": [
       {
-        "title": "Voltron AI Coder",
+        "title": "VOLTRON AI Coder",
         "width": 1200,
         "height": 800,
         "minWidth": 600,
