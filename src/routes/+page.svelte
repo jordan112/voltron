@@ -168,6 +168,18 @@
     });
   }
   
+  function handleCommand(panelId: string, cmd: string) {
+    const encoder = new TextEncoder();
+    const command = cmd === 'clear' ? '\x1b[2J\x1b[H' : `${cmd}\n`;
+    const bytes = Array.from(encoder.encode(command));
+    invoke('write_to_terminal', { 
+      sessionId: panelId,
+      data: bytes 
+    }).catch(err => {
+      console.error('Failed to send command:', err);
+    });
+  }
+  
   async function changePath() {
     try {
       const selected = await open({
@@ -229,6 +241,7 @@
           mode={panel.mode}
           isRunning={panel.isRunning}
           onModeChange={(mode) => handleModeChange(panel.id, mode)}
+          onCommand={(cmd) => handleCommand(panel.id, cmd)}
         />
       </div>
     {/each}

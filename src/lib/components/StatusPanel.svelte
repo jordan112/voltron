@@ -3,10 +3,15 @@
   export let isRunning: boolean = false;
   export let position: string;
   export let onModeChange: (mode: 'edit' | 'plan') => void;
+  export let onCommand: (command: string) => void;
   
   function toggleMode() {
     const newMode = mode === 'edit' ? 'plan' : 'edit';
     onModeChange(newMode);
+  }
+  
+  function sendCommand(cmd: string) {
+    onCommand(cmd);
   }
 </script>
 
@@ -16,6 +21,21 @@
       <div class="spinner"></div>
       <span>Running...</span>
     {/if}
+  </div>
+  
+  <div class="status-center">
+    <button class="cmd-btn" on:click={() => sendCommand('clear')} title="Clear terminal">
+      Clear
+    </button>
+    <button class="cmd-btn" on:click={() => sendCommand('/compact')} title="Toggle compact mode">
+      Compact
+    </button>
+    <button class="cmd-btn" on:click={() => sendCommand('/help')} title="Show help">
+      Help
+    </button>
+    <button class="cmd-btn" on:click={() => sendCommand('/history')} title="Show history">
+      History
+    </button>
   </div>
   
   <div class="status-right">
@@ -43,12 +63,21 @@
   }
   
   .status-left {
-    flex: 1;
+    flex: 0 0 auto;
     text-align: left;
     display: flex;
     align-items: center;
     gap: 8px;
     color: #ccc;
+    min-width: 100px;
+  }
+  
+  .status-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
   }
   
   .spinner {
@@ -65,8 +94,31 @@
   }
   
   .status-right {
-    flex: 1;
+    flex: 0 0 auto;
     text-align: right;
+  }
+  
+  .cmd-btn {
+    background: none;
+    border: 1px solid #3e3e3e;
+    color: #999;
+    padding: 2px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+    transition: all 0.15s;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  
+  .cmd-btn:hover {
+    background-color: #3e3e3e;
+    border-color: #4e4e4e;
+    color: #fff;
+  }
+  
+  .cmd-btn:active {
+    background-color: #4e4e4e;
+    transform: scale(0.98);
   }
   
   .mode-toggle {
